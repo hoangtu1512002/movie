@@ -4,10 +4,12 @@ import { Navigation, Autoplay } from 'swiper';
 import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import axios, {apiKey, imageConfig} from '../../../api/config'
 import './HeroSlide.scss'
 import Button, { OutLineButton } from '../button/Button';
 import Modal, { ModalContent } from '../modal/Modal';
+
+import {imageConfig} from '../../../api/axiosClient'
+import tmdbApi, {category, movieType} from '../../../api/tmdbApi';
 
 const HeroSlide = () => {
 
@@ -17,8 +19,8 @@ const HeroSlide = () => {
         const getMovies = async () => {
             const params = {page: 1}
             try {
-                const response = await axios.get(`movie/popular?api_key=${apiKey}`, {params});
-                setMoviesItems(response.data.results.slice(0, 4));
+                const response = await tmdbApi.getMoviesList(movieType.popular, {params});
+                setMoviesItems(response.results.slice(0, 4));
             } catch (error) {
                 console.log(error);
             }
@@ -35,9 +37,9 @@ const HeroSlide = () => {
             spaceBetween={0}
             grabCursor={true}
             modules={[Autoplay, Navigation]}
-            // autoplay={{
-            //     delay: 3000,
-            // }}
+            autoplay={{
+                delay: 3000,
+            }}
         >
             {moviesItems.map((item, index) => (
                 <SwiperSlide key={index}>
@@ -68,11 +70,10 @@ const HeroSlideItem = props => {
 
         const modal = document.querySelector(`#modal_${item.id}`);
 
-        const videos = await axios.get('movie/' + item.id +  `/videos?api_key=${apiKey}`);
+        const videos = await tmdbApi.getVideos(category.movie, item.id)
 
-
-        if(videos.data.results.length > 0) {
-            const videoSrc = 'https://www.youtube.com/embed/' + videos.data.results[1].key;
+        if(videos.results.length > 0) {
+            const videoSrc = 'https://www.youtube.com/embed/' + videos.results[1].key;
 
             modal.querySelector('.modal__content > iframe').setAttribute('src', videoSrc);
         } else {
@@ -89,7 +90,7 @@ const HeroSlideItem = props => {
                     <h2 className="title">{item.title}</h2>
                     <div className="overview">{item.overview}</div>
                     <div className="btns">
-                        <Button onClick={() => navigate('/movie' + item.id)}>
+                        <Button onClick={() => navigate('/movie/' + item.id)}>
                             Watch Now 
                         </Button>
                         <OutLineButton onClick={setModalActive}>

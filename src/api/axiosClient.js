@@ -1,14 +1,18 @@
-import axios from "axios";
-import queryString from 'query-string';
 
-import apiConfig from "./apiConfig";
+import axios from 'axios';
+
+export const apiKey = '8712e8c17441c701fbc30bb822616eef';
+
+export const imageConfig = {
+    originalImage: (imgPath) => `https://image.tmdb.org/t/p/original${imgPath}`,
+    w500Image: (imgPath) => `https://image.tmdb.org/t/p/w500${imgPath}`,
+}
 
 const axiosClient = axios.create({
-    baseUrl: apiConfig.baseUrl,
+    baseURL: "https://api.themoviedb.org/3/",
     headers: {
-        'Content-Type': 'application/json'
+        'content-type': 'application/json',
     },
-    paramsSerializer: params => queryString.stringify({...params, api_key: apiConfig.apiKey})
 });
 
 axiosClient.interceptors.request.use(async (config) => config);
