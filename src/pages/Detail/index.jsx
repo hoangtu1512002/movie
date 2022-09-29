@@ -32,15 +32,21 @@ function Detail() {
     const videos = await tmdbApi.getVideos(cate.movie, id);
 
     if (videos.results.length > 0) {
-      const videoSrc = "https://www.youtube.com/embed/" + videos.results[1].key;
+      const videoPlay = videos.results[0].key || videos.results[1].key;
+
+      const videoSrc = "https://www.youtube.com/embed/" + videoPlay;
 
       modal
         .querySelector(".modal__content > iframe")
         .setAttribute("src", videoSrc);
-    } else {
-        modal
+    } else if (videos.results.length === 0 ) {
+      modal
         .querySelector(".modal__content > iframe")
-        .setAttribute("src", 'https://www.youtube.com/embed/bCVfgWTkpd0');
+        .setAttribute("src", "https://www.youtube.com/embed/bCVfgWTkpd0");
+    } else {
+      modal
+        .querySelector(".modal__content > iframe")
+        .setAttribute("src", "https://www.youtube.com/embed/bCVfgWTkpd0");
     }
 
     modal.classList.toggle("active");
