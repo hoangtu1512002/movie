@@ -31,7 +31,7 @@ function Footer() {
           </div>
 
           <div className="footer__content__menu">
-            <Link to="/">You musk watch</Link>
+            <Link to="/">You musk watch ss</Link>
             <Link to="/">Recent release</Link>
             <Link to="/">Top IMDB</Link>
           </div>
